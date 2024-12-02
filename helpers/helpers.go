@@ -26,6 +26,14 @@ func ReadInput(filepath string) ([]string, error) {
 	return lines, scanner.Err()
 }
 
-func ParseFilepath(arg *string) {
+func SetFilepathFlag(arg *string) {
 	flag.StringVar(arg, "filepath", ".", "The path to the challenge's input file.")
+}
+
+func Map[T, K any](input []T, fn func(T) K) []K {
+	output := make([]K, len(input))
+	for i, t := range input {
+		output[i] = fn(t)
+	}
+	return output
 }

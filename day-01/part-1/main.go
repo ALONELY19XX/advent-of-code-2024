@@ -14,7 +14,7 @@ import (
 
 func main() {
 	var filepath string
-	helpers.ParseFilepath(&filepath)
+	helpers.SetFilepathFlag(&filepath)
 	flag.Parse()
 
 	lines, err := helpers.ReadInput(filepath)
