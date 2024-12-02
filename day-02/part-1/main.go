@@ -31,6 +31,9 @@ func main() {
 
 	// iterate over each report
 	for _, line := range lines {
+
+		badLvl := false
+
 		levelsRaw := strings.Fields(line)
 
 		// map raw levels (string) to ints
@@ -42,42 +45,46 @@ func main() {
 			return num
 		})
 
-		var currLvl int
-		var nextLvl int
-		var isAsc bool
+		// flag to determine order of levels (asc vs desc)
+		isAsc := false
 
-		// iterate levels within report
 		for idx := range len(levels) - 1 {
-			currLvl = levels[idx]
-			nextLvl = levels[idx+1]
+			curr := levels[idx]
+			next := levels[idx+1]
+			diff := curr - next
+			diffAbs := int(math.Abs(float64(curr) - float64(next)))
 
-			diff := int(math.Abs(float64(currLvl) - float64(nextLvl)))
-
-			// first iteration (first 2 levels) determine order (asc vs desc)
+			// determine order on first pair (or abort)
 			if idx == 0 {
-				if currLvl < nextLvl {
+				if diff < 0 {
 					isAsc = true
-				} else if currLvl > nextLvl {
+				} else if diff > 0 {
 					isAsc = false
 				} else {
+					badLvl = true
 					break
 				}
 			}
 
-			if (isAsc && currLvl < nextLvl) || (!isAsc && currLvl > nextLvl) {
-				if MIN_DIFF <= diff && diff <= MAX_DIFF {
-					// everything fine so far.
-				} else {
-					break
-				}
-			} else {
+			// if pair violates against determined order: abort
+			if (isAsc && diff > 0) || (!isAsc && diff < 0) {
+				badLvl = true
 				break
 			}
 
-			// if we reach this after comparing the last 2 levels, then its a safe report
-			if idx == len(levels)-2 {
-				totalSafeReports++
+			// check if fluctuation is within allowed limits
+			if MIN_DIFF <= diffAbs && diffAbs <= MAX_DIFF {
+				continue
+			} else {
+				badLvl = true
+				break
 			}
+		}
+
+		if badLvl {
+			continue
+		} else {
+			totalSafeReports++
 		}
 	}
 
