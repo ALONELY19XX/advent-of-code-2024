@@ -10,11 +10,6 @@ import (
 	"github.com/ALONELY19XX/advent-of-code-2024/helpers"
 )
 
-const (
-	MIN_DIFF = 1
-	MAX_DIFF = 3
-)
-
 func main() {
 	var filepath string
 	helpers.SetFilepathFlag(&filepath)
