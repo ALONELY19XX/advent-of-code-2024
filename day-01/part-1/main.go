@@ -17,7 +17,7 @@ func main() {
 	helpers.SetFilepathFlag(&filepath)
 	flag.Parse()
 
-	lines, err := helpers.ReadInput(filepath)
+	lines, err := helpers.ReadInputLines(filepath)
 
 	if err != nil {
 		log.Fatal(err)
@@ -57,5 +57,5 @@ func main() {
 		dist += int64(math.Abs(diff))
 	}
 
-	fmt.Println("Solution:", dist) // Answer: 1223326
+	fmt.Println("Solution:", dist)
 }

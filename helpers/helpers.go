@@ -6,7 +6,17 @@ import (
 	"os"
 )
 
-func ReadInput(filepath string) ([]string, error) {
+func ReadInput(filepath string) (string, error) {
+	bytes, err := os.ReadFile(filepath)
+
+	if err != nil {
+		return "", err
+	}
+
+	return string(bytes), nil
+}
+
+func ReadInputLines(filepath string) ([]string, error) {
 	file, err := os.Open(filepath)
 
 	if err != nil {

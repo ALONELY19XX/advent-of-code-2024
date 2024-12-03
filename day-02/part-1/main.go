@@ -21,7 +21,7 @@ func main() {
 	helpers.SetFilepathFlag(&filepath)
 	flag.Parse()
 
-	lines, err := helpers.ReadInput(filepath)
+	lines, err := helpers.ReadInputLines(filepath)
 
 	if err != nil {
 		log.Fatal(err)
@@ -88,5 +88,5 @@ func main() {
 		}
 	}
 
-	fmt.Println("Solution:", totalSafeReports) // Answer: 299
+	fmt.Println("Solution:", totalSafeReports)
 }
