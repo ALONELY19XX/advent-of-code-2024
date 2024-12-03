@@ -32,7 +32,7 @@ func main() {
 	// -- OR --
 	//  where match consists of 2 values.
 	// * 1st value: entire matched string, e.g. "do()" or "don't()"
-	// * 2nd value: enpty string "" (since no submatch pattern was matched for these cases)
+	// * 2nd value: empty string "" (since no submatch pattern was matched for these cases)
 	matches := mulRegex.FindAllStringSubmatch(mem, -1)
 
 	res := 0
