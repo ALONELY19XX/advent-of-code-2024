@@ -16,6 +16,10 @@ func main() {
 
 	data, err := helpers.ReadInput(filepath)
 
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	lineSep := "\r\n"
 	lineLen := strings.Index(data, lineSep)
 	// text as continuos block (newlines newlines/carriage-ret removed)
@@ -84,10 +88,6 @@ func main() {
 				composeAndCheckWord(&totalXmas, byte(ch), ch2, ch3, ch4)
 			}
 		}
-	}
-
-	if err != nil {
-		log.Fatal(err)
 	}
 
 	fmt.Println("Solution:", totalXmas)
