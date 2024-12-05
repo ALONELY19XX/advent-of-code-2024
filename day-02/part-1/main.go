@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"math"
 	"strconv"
 	"strings"
 
@@ -32,8 +31,6 @@ func main() {
 	// iterate over each report
 	for _, line := range lines {
 
-		badLvl := false
-
 		levelsRaw := strings.Fields(line)
 
 		// map raw levels (string) to ints
@@ -45,48 +42,61 @@ func main() {
 			return num
 		})
 
-		// flag to determine order of levels (asc vs desc)
-		isAsc := false
+		diffs := make([]int, len(levels)-1)
+
+		// flag which tracks if a zero-diff is detected.
+		// in this case we can abort early and dont need to check for
+		// asc or desc ordering
+		zeroDiffExists := false
 
 		for idx := range len(levels) - 1 {
 			curr := levels[idx]
 			next := levels[idx+1]
 			diff := curr - next
-			diffAbs := int(math.Abs(float64(curr) - float64(next)))
-
-			// determine order on first pair (or abort)
-			if idx == 0 {
-				if diff < 0 {
-					isAsc = true
-				} else if diff > 0 {
-					isAsc = false
-				} else {
-					badLvl = true
-					break
-				}
-			}
-
-			// if pair violates against determined order: abort
-			if (isAsc && diff > 0) || (!isAsc && diff < 0) {
-				badLvl = true
+			if diff == 0 {
+				zeroDiffExists = true
 				break
 			}
-
-			// check if fluctuation is within allowed limits
-			if MIN_DIFF <= diffAbs && diffAbs <= MAX_DIFF {
-				continue
-			} else {
-				badLvl = true
-				break
-			}
+			diffs[idx] = diff
 		}
 
-		if badLvl {
+		if zeroDiffExists {
 			continue
-		} else {
+		}
+
+		if isAllValidAsc(diffs) || isAllValidDesc(diffs) {
 			totalSafeReports++
 		}
+
 	}
 
 	fmt.Println("Solution:", totalSafeReports)
+}
+
+// check if all levels are ascending and within limits
+// a fully ascending levels report is represented by a fully negative diffs list
+// e.g. consider report "1 3 4 7", then the diffs list will be:
+// [(1-3), (3-4), (4-7)] = [-2, -1, -3]
+func isAllValidAsc(diffs []int) bool {
+	isAllValid := true
+	for _, diff := range diffs {
+		if !(-MAX_DIFF <= diff && diff <= -MIN_DIFF) {
+			isAllValid = false
+		}
+	}
+	return isAllValid
+}
+
+// check if all levels are descending and within limits
+// a fully descending levels report is represented by a fully positive diffs list
+// e.g. consider report "7 4 3 1", then the diffs list will be:
+// [(7-4), (4-3), (3-1)] = [3, 1, 2]
+func isAllValidDesc(diffs []int) bool {
+	isAllValid := true
+	for _, diff := range diffs {
+		if !(MIN_DIFF <= diff && diff <= MAX_DIFF) {
+			isAllValid = false
+		}
+	}
+	return isAllValid
 }
