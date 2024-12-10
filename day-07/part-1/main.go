@@ -11,9 +11,9 @@ import (
 )
 
 const (
-	OP_PLUS = byte('+')
-	OP_MULT = byte('*')
-	OP_NONE = byte(' ')
+	OP_PLUS = '+'
+	OP_MULT = '*'
+	OP_NONE = ' '
 )
 
 type Node struct {
